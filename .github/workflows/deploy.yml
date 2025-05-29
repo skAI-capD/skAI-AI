@@ -1,15 +1,13 @@
-name: FastAPI Auto Deploy
-
-on:
-  push:
-    branches: [ develop ]
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # 🔹 deploy.sh 파일을 EC2에 복사
+      # ✅ 1. 코드 체크아웃 (필수)
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # ✅ 2. EC2에 deploy.sh 복사
       - name: 📦 Copy deploy.sh to EC2
         uses: appleboy/scp-action@master
         with:
@@ -17,15 +15,15 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_KEY }}
           source: "deploy.sh"
-          target: "/home/ubuntu/skAI-AI"  # EC2 내 프로젝트 경로로 복사
+          target: "/home/ubuntu/skAI-AI"
 
-      # 🔹 복사된 deploy.sh 실행
+      # ✅ 3. EC2에 SSH 접속 후 deploy.sh 실행
       - name: 🚀 Connect & Deploy to EC2
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
-          key: ${{ secrets.EC2_KEY }}
+          key: ${{ secrets.EC2_KEY }}\
           script: |
             cd skAI-AI
             chmod +x deploy.sh
