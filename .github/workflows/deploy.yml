@@ -16,5 +16,11 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_KEY }}
           script: |
-            chmod +x deploy.sh
+            echo "📁 현재 디렉토리:"
+            pwd
+            echo "📄 디렉토리 목록:"
+            ls -al
+            echo "🔍 deploy.sh 위치 찾기:"
+            find . -name deploy.sh
+            chmod +x ./deploy.sh
             ./deploy.sh
