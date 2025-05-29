@@ -9,6 +9,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 🔹 deploy.sh 파일을 EC2에 복사
+      - name: 📦 Copy deploy.sh to EC2
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_KEY }}
+          source: "deploy.sh"
+          target: "/home/ubuntu/skAI-AI"  # EC2 내 프로젝트 경로로 복사
+
+      # 🔹 복사된 deploy.sh 실행
       - name: 🚀 Connect & Deploy to EC2
         uses: appleboy/ssh-action@master
         with:
@@ -16,5 +27,6 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_KEY }}
           script: |
-            cd skAI-AI  # ✅ 프로젝트 폴더로 이동
-            ./deploy.sh
+            cd skAI-AI
+            chmod +x deploy.sh
+
