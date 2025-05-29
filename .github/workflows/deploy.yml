@@ -17,5 +17,4 @@ jobs:
           key: ${{ secrets.EC2_KEY }}
           script: |
             cd skAI-AI  # ✅ 프로젝트 폴더로 이동
-            chmod +x deploy.sh
             ./deploy.sh
