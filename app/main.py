@@ -1,13 +1,12 @@
 from fastapi import FastAPI, File, UploadFile, Form
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
-from typing import Optional
 from app.ocr_utils import extract_text_from_image
 from app.pipeline import run_diary_image_pipeline
 
 app = FastAPI()
 
-# CORS 허용 (프론트에서 직접 호출 시 필요)
+# CORS 설정
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -18,8 +17,7 @@ app.add_middleware(
 
 @app.post("/generate-diary-image")
 async def generate_diary_image_api(
-    diaryImage: Optional[UploadFile] = File(None),
-    diaryText: Optional[str] = Form(None),
+    diaryImage: UploadFile = File(...),
     gender: str = Form(...),
     style: str = Form(...),
     color: str = Form(...),
@@ -28,16 +26,12 @@ async def generate_diary_image_api(
     outfit: str = Form("")
 ):
     try:
-        # 1. 이미지 or 텍스트 선택 처리 (방어적 체크 포함)
-        if diaryImage and hasattr(diaryImage, "file") and getattr(diaryImage, "filename", ""):
-            original = extract_text_from_image(diaryImage)
-        elif diaryText:
-            original = diaryText
-        else:
-            return JSONResponse(status_code=400, content={"error": "텍스트 또는 이미지 중 하나는 반드시 필요합니다."})
+        # 이미지 필수 체크 및 OCR 수행
+        if not diaryImage or not hasattr(diaryImage, "file") or not diaryImage.filename:
+            return JSONResponse(status_code=400, content={"error": "이미지는 필수입니다."})
 
+        original = extract_text_from_image(diaryImage)
 
-        # 2. 파이프라인 실행
         result = run_diary_image_pipeline(
             diary_text=original,
             gender=gender,
@@ -48,7 +42,6 @@ async def generate_diary_image_api(
             outfit=outfit
         )
 
-        # 3. 최종 응답
         return {
             "originalText": original,
             "correctedText": result["correctedText"],
