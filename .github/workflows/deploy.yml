@@ -16,5 +16,5 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_KEY }}
           script: |
-            cd diary-fastapi
+            chmod +x deploy.sh
             ./deploy.sh
