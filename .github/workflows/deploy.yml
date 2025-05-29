@@ -1,0 +1,34 @@
+name: FastAPI Auto Deploy  # 워크플로우 이름
+
+on:
+  push:
+    branches: [ develop ]  # develop 브랜치에 push될 때만 실행됨
+  workflow_dispatch:       # ✅ 수동 실행도 가능하게 설정
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: 📦 Copy deploy.sh to EC2
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_KEY }}
+          source: "deploy.sh"
+          target: "/home/ubuntu/skAI-AI"
+
+      - name: 🚀 Connect & Deploy to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            cd skAI-AI
+            chmod +x deploy.sh
+            ./deploy.sh
