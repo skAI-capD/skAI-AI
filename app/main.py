@@ -5,7 +5,7 @@ from app.ocr_utils import extract_text_from_image
 from app.pipeline import run_diary_image_pipeline
 
 app = FastAPI()
-
+load_dotenv()
 # CORS 설정
 app.add_middleware(
     CORSMiddleware,
@@ -15,6 +15,21 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.post("/dictation-ocr")
+async def extract_text_for_dictation(image: UploadFile = File(...)):
+    try:
+        if not image or not hasattr(image, "file") or not image.filename:
+            return JSONResponse(status_code=400, content={"error": "이미지는 필수입니다."})
+
+        extracted_text = extract_text_from_image(image)
+
+        return {
+            "extractedText": extracted_text
+        }
+
+    except Exception as e:
+        return JSONResponse(status_code=500, content={"error": str(e)})
+        
 @app.post("/generate-diary-image")
 async def generate_diary_image_api(
     diaryImage: UploadFile = File(...),
@@ -50,3 +65,4 @@ async def generate_diary_image_api(
 
     except Exception as e:
         return JSONResponse(status_code=500, content={"error": str(e)})
+    print("[DEBUG] API KEY:", os.getenv("OPENAI_API_KEY"))  # 꼭 None 아닌지 확인
