@@ -20,18 +20,22 @@ app.add_middleware(
 @app.post("/dictation-ocr")
 async def extract_text_for_dictation(image: UploadFile = File(...)):
     try:
+        print("[DEBUG] API KEY:", os.getenv("OPENAI_API_KEY"))
+
         if not image or not hasattr(image, "file") or not image.filename:
             return JSONResponse(status_code=400, content={"error": "이미지는 필수입니다."})
 
         extracted_text = extract_text_from_image(image)
 
         return {
-            "extractedText": extracted_text
+            "extractedText": extracted_text or ""
         }
 
     except Exception as e:
+        print("[ERROR] OCR 처리 중 예외:", str(e))
         return JSONResponse(status_code=500, content={"error": str(e)})
-        
+
+
 @app.post("/generate-diary-image")
 async def generate_diary_image_api(
     diaryImage: UploadFile = File(...),
