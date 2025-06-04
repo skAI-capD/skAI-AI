@@ -5,7 +5,9 @@ from app.ocr_utils import extract_text_from_image
 from app.pipeline import run_diary_image_pipeline
 
 app = FastAPI()
-load_dotenv()
+import os
+from dotenv import load_dotenv  
+load_dotenv()                   
 # CORS 설정
 app.add_middleware(
     CORSMiddleware,
