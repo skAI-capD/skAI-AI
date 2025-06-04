@@ -112,17 +112,17 @@ def get_character_prompt(gender: str, use_custom: bool, hairstyle: str = "", out
             "숏": "short black hair"
         }
         outfit_map = {
-            "남색 치마+하얀 셔츠": "a navy skirt and a white blouse",
-            "청바지+분홍 반팔": "blue jeans and a pink short-sleeved shirt",
-            "청색 원피스": "a blue dress"
+            "1": "a navy skirt and a white blouse",
+            "2": "blue jeans and a pink short-sleeved shirt",
+            "3": "a blue dress"
         }
     else:
         hair_map = {
             "기본": "short black hair"
         }
         outfit_map = {
-            "청긴바지+흰색 셔츠": "blue pants and a white shirt",
-            "베이지 반바지+하늘색 셔츠": "beige shorts and a sky blue shirt"
+            "4: "blue pants and a white shirt",
+            "5": "beige shorts and a sky blue shirt"
         }
 
     return (
