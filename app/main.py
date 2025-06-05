@@ -5,7 +5,7 @@ from app.ocr_utils import extract_text_from_image
 from app.pipeline import run_diary_image_pipeline
 
 app = FastAPI(
-    title="Your API",
+    title="Diary API",
     docs_url="/docs",  # ✅ 이게 있어야 Swagger 접근 가능
     redoc_url=None
 )
