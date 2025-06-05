@@ -118,7 +118,7 @@ def get_character_prompt(gender: str, use_custom: bool, hairstyle: str = "", out
         }
     else:
         hair_map = {
-            "basic": "short black hair"
+            "short": "short black hair"
         }
         outfit_map = {
             "four": "blue pants and a white shirt",
