@@ -43,8 +43,8 @@ async def generate_diary_image_api(
     style: str = Form(...),
     color: str = Form(...),
     useCustom: bool = Form(...),
-    hairstyle: str = Form(""),
-    outfit: str = Form("")
+    hairstyle: str = Form(...),
+    outfit: str = Form(...)
 ):
     try:
         # 이미지 필수 체크 및 OCR 수행
