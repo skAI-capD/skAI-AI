@@ -90,7 +90,49 @@ color_prompt_map = {
 }
 
 
-# 5. 캐릭터 설정
+# # 5. 캐릭터 설정
+# def get_character_prompt(gender: str, use_custom: bool, hairstyle: str = "", outfit: str = "") -> str:
+#     if not use_custom:
+#         default_map = {
+#             "girl": (
+#                 "The main character is a young girl with a round face, short straight black hair, and expressive dark brown eyes. "
+#                 "She is wearing a white top and a blue skirt. Her appearance should remain consistent."
+#             ),
+#             "boy": (
+#                 "The main character is a young boy with a round face, short black hair, and big bright eyes. "
+#                 "He is wearing a blue shirt and dark shorts. His appearance should remain consistent."
+#             )
+#         }
+#         return default_map[gender]
+
+#     else:
+#         if gender == "girl":
+#             hair_map = {
+#                 "long": "long black hair",
+#                 "med": "medium-length black hair",
+#                 "short": "short black hair"
+#             }
+#             outfit_map = {
+#                 "one": "a navy skirt and a white blouse",
+#                 "two": "blue jeans and a pink short-sleeved shirt",
+#                 "three": "a blue dress"
+#             }
+#         elif gender == "boy":
+#             hair_map = {
+#                 "short": "short black hair"
+#             }
+#             outfit_map = {
+#                 "four": "blue pants and a white shirt",
+#                 "five": "beige shorts and a sky blue shirt"
+#             }
+#         else:
+#             raise ValueError(f"Invalid gender value: {gender}")
+
+#         return (
+#             f"The main character is a young {gender} with {hair_map[hairstyle]}, a round face, and expressive eyes. "
+#             f"They are wearing {outfit_map[outfit]}. Their appearance should remain consistent throughout the illustration."
+#         )
+
 def get_character_prompt(gender: str, use_custom: bool, hairstyle: str = "", outfit: str = "") -> str:
     if not use_custom:
         default_map = {
@@ -103,8 +145,11 @@ def get_character_prompt(gender: str, use_custom: bool, hairstyle: str = "", out
                 "He is wearing a blue shirt and dark shorts. His appearance should remain consistent."
             )
         }
+        if gender not in default_map:
+            raise ValueError(f"Invalid gender value: {gender}")
         return default_map[gender]
 
+    # 아래는 use_custom == True인 경우
     if gender == "girl":
         hair_map = {
             "long": "long black hair",
@@ -116,7 +161,7 @@ def get_character_prompt(gender: str, use_custom: bool, hairstyle: str = "", out
             "two": "blue jeans and a pink short-sleeved shirt",
             "three": "a blue dress"
         }
-    else:
+    elif gender == "boy":
         hair_map = {
             "short": "short black hair"
         }
@@ -124,11 +169,21 @@ def get_character_prompt(gender: str, use_custom: bool, hairstyle: str = "", out
             "four": "blue pants and a white shirt",
             "five": "beige shorts and a sky blue shirt"
         }
+    else:
+        raise ValueError(f"Invalid gender value: {gender}")
+
+    # 방어적 접근
+    hair_description = hair_map.get(hairstyle)
+    outfit_description = outfit_map.get(outfit)
+
+    if not hair_description or not outfit_description:
+        raise ValueError(f"Invalid hairstyle or outfit: hairstyle={hairstyle}, outfit={outfit}")
 
     return (
-        f"The main character is a young {gender} with {hair_map[hairstyle]}, a round face, and expressive eyes. "
-        f"They are wearing {outfit_map[outfit]}. Their appearance should remain consistent throughout the illustration."
+        f"The main character is a young {gender} with {hair_description}, a round face, and expressive eyes. "
+        f"They are wearing {outfit_description}. Their appearance should remain consistent throughout the illustration."
     )
+
 
 
 # 6. 전체 프롬프트 조합
