@@ -4,7 +4,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.ocr_utils import extract_text_from_image
 from app.pipeline import run_diary_image_pipeline
 
-app = FastAPI()
+app = FastAPI(
+    title="Your API",
+    docs_url="/docs",  # ✅ 이게 있어야 Swagger 접근 가능
+    redoc_url=None
+)
 import os
 from dotenv import load_dotenv  
 load_dotenv()                   
