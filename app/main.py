@@ -3,6 +3,9 @@ from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from app.ocr_utils import extract_text_from_image
 from app.pipeline import run_diary_image_pipeline
+import nest_asyncio
+nest_asyncio.apply()
+
 
 app = FastAPI(
     title="Diary API",
@@ -11,7 +14,9 @@ app = FastAPI(
 )
 import os
 from dotenv import load_dotenv  
-load_dotenv()                   
+load_dotenv()  
+
+print("✅ MAIN - OPENAI_API_KEY:", os.getenv("OPENAI_API_KEY"))
 # CORS 설정
 app.add_middleware(
     CORSMiddleware,
@@ -70,9 +75,13 @@ async def generate_diary_image_api(
         return {
             "originalText": original,
             "correctedText": result["correctedText"],
-            "imageUrl": result["imageUrl"]
+            "imageUrls": result["imageUrls"]
         }
 
     except Exception as e:
         return JSONResponse(status_code=500, content={"error": str(e)})
     print("[DEBUG] API KEY:", os.getenv("OPENAI_API_KEY"))  # 꼭 None 아닌지 확인
+
+    print("✅ OPENAI_API_KEY:", os.getenv("OPENAI_API_KEY"))
+    print("✅ CLOVA_OCR_URL:", os.getenv("CLOVA_OCR_URL"))
+    print("✅ REPLICATE_API_TOKEN:", os.getenv("REPLICATE_API_TOKEN"))
