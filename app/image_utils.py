@@ -72,7 +72,6 @@ def generate_with_sd(prompt: str, negative_prompt: str = "") -> str:
 def generate_all_images(prompt: str) -> dict:
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
-
     async def gather_results():
         return await asyncio.gather(
             loop.run_in_executor(None, generate_with_dalle, prompt),
